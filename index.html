@@ -1,400 +1,274 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="app()" :class="{'dark':dark}" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dioubi Abdenour — Computer Science student crafting automation, custom scripts, and robust API integrations.">
+    <meta name="keywords" content="backend developer, automation, python, Apps Script, REST APIs, portfolio, pygame">
+    <meta name="author" content="Dioubi Abdenour">
+    
     <title>Dioubi Abdenour | Portfolio</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+
+    <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { display: ['PT Sans','sans-serif'], body: ['DM Sans','sans-serif'] },
+          colors: { accent: '#FF6B2B', 'accent-light': '#FF8F5C' }
+        }
+      }
+    }
+    </script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{font-family:'DM Sans',sans-serif}
+    h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
+    body{transition:background-color .3s,color .3s}
 
-        :root {
-            --bg: #0b0d19;
-            --surface: #161930;
-            --surface-hover: #1f2344;
-            --text: #f8f8f2;
-            --text-muted: #949ebd;
-            --purple: #6272a4;
-            --neon-pink: #ff79c6;
-            --neon-green: #50fa7b;
-            --neon-cyan: #8be9fd;
-        }
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E")}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:#FF6B2B;border-radius:99px}
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            line-height: 1.6;
-            padding: 4rem 2rem;
-            display: flex;
-            justify-content: center;
-        }
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity .6s cubic-bezier(.4,0,.2,1),transform .6s cubic-bezier(.4,0,.2,1)}
+    .reveal.in{opacity:1;transform:none}
+    .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
 
-        .portfolio-wrapper {
-            max-width: 1100px;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 4rem;
-        }
+    .nl{position:relative}
+    .nl::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;background:currentColor;transition:width .22s cubic-bezier(.4,0,.2,1)}
+    .nl:hover::after{width:100%}
 
-        /* Fixed Sidebar Architecture Layout */
-        .sidebar-container {
-            position: relative;
-        }
+    .shimmer{position:relative;overflow:hidden}
+    .shimmer::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:rgba(255,255,255,.18);transform:skewX(-20deg);transition:left .4s cubic-bezier(.4,0,.2,1)}
+    .shimmer:hover::after{left:160%}
 
-        .sidebar {
-            position: -webkit-sticky;
-            position: sticky;
-            top: 4rem;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: auto;
-        }
+    .card-h{transition:transform .28s cubic-bezier(.4,0,.2,1),border-color .18s}
+    .card-h:hover{transform:translateY(-4px)}
 
-        .profile-title {
-            font-size: 2.8rem;
-            font-weight: 800;
-            line-height: 1.1;
-            letter-spacing: -1px;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff 0%, var(--text-muted) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .tagline {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--neon-pink);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .bio {
-            color: var(--text-muted);
-            font-size: 1rem;
-            margin-bottom: 2.5rem;
-        }
-        
-        .section-label {
-            font-family: 'JetBrains Mono', monospace;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--neon-cyan);
-            background: rgba(139, 233, 253, 0.05);
-            border: 1px solid rgba(139, 233, 253, 0.15);
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 0 15px rgba(139, 233, 253, 0.03);
-        }
-
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .skill-tag {
-            background: rgba(98, 114, 164, 0.1);
-            border: 1px solid rgba(98, 114, 164, 0.2);
-            color: var(--neon-cyan);
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .skill-tag:hover {
-            border-color: var(--neon-cyan);
-            background: rgba(139, 233, 253, 0.05);
-        }
-
-        /* Right Column: Dynamic Project Showcase */
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .project-card {
-            background: var(--surface);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .project-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(98, 114, 164, 0.3);
-        }
-
-        .media-container {
-            position: relative;
-            background: #0f111a;
-            width: 100%;
-            display: block;
-            overflow: hidden;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        }
-
-        .media-container img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .media-fallback {
-            padding: 6rem 2rem;
-            text-align: center;
-            color: var(--purple);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-        }
-
-        .card-body {
-            padding: 2.5rem;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            gap: 1rem;
-        }
-
-        .project-name {
-            font-size: 1.6rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .private-badge {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            background: rgba(255, 121, 198, 0.1);
-            border: 1px solid var(--neon-pink);
-            color: var(--neon-pink);
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            white-space: nowrap;
-        }
-
-        .project-intro {
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-            font-size: 1.05rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .feature-item {
-            display: flex;
-            gap: 0.8rem;
-        }
-
-        .feature-icon {
-            color: var(--neon-green);
-            font-size: 1.2rem;
-            line-height: 1;
-        }
-
-        .feature-text strong {
-            display: block;
-            color: var(--text);
-            font-size: 0.95rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .feature-text span {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            display: block;
-        }
-
-        /* Upgraded Pulsing Action Button */
-        .action-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--text);
-            color: var(--bg);
-            text-decoration: none;
-            padding: 0.8rem 1.8rem;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            transition: transform 0.2s ease;
-            animation: slowPulse 3s infinite ease-in-out;
-        }
-
-        .action-btn:hover {
-            animation: none; /* Stops pulsing when hovering over it */
-            background: var(--neon-green);
-            color: var(--bg);
-            transform: scale(1.04);
-            box-shadow: 0 0 20px rgba(80, 250, 123, 0.4);
-        }
-
-        /* The Slow Pulse Keyframes Animation Loop */
-        @keyframes slowPulse {
-            0% {
-                background: var(--text);
-                box-shadow: 0 0 0 0 rgba(248, 248, 242, 0.4);
-            }
-            50% {
-                background: var(--neon-green);
-                box-shadow: 0 0 15px 4px rgba(80, 250, 123, 0.3);
-            }
-            100% {
-                background: var(--text);
-                box-shadow: 0 0 0 0 rgba(248, 248, 242, 0);
-            }
-        }
-
-        .sidebar-footer {
-            margin-top: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-        }
-
-        .sidebar-footer a {
-            color: var(--neon-pink);
-            text-decoration: none;
-            transition: opacity 0.2s ease;
-        }
-
-        .sidebar-footer a:hover {
-            opacity: 0.8;
-        }
-
-        /* Responsive Mobile Breaks */
-        @media (max-width: 900px) {
-            .portfolio-wrapper {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-            }
-            body { padding: 2rem 1rem; }
-            .sidebar { position: static; }
-            .skills-container { margin-bottom: 1.5rem; }
-            .sidebar-footer { margin-top: 1.5rem; }
-        }
-
-        @media (max-width: 600px) {
-            .features-grid { grid-template-columns: 1fr; }
-            .card-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-        }
+    [x-cloak]{display:none!important}
     </style>
 </head>
-<body>
 
-    <div class="portfolio-wrapper">
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased min-h-screen flex flex-col justify-between">
+
+    <header class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
+      :class="sc?'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-sm shadow-black/5':''">
+      <nav class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Main navigation">
+        <a href="#hero" class="font-display font-bold text-xl tracking-tight relative z-10">
+          <span class="text-zinc-900 dark:text-white">abdenour</span><span class="text-accent">.dio</span>
+        </a>
+
+        <div class="flex items-center gap-4">
+          <button @click="dark=!dark" class="w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors" :aria-label="dark?'Light mode':'Dark mode'">
+            <svg x-show="!dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            <svg x-show="dark"  class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+          </button>
+          
+          <a href="https://github.com/AbdenourDio" target="_blank" class="text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-accent transition-colors nl">GitHub ↗</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="flex-grow pt-16">
         
-        <!-- Structural Sidebar Wrapper Layer -->
-        <div class="sidebar-container">
-            <div class="sidebar">
-                <h1 class="profile-title">Dioubi<br>Abdenour</h1>
-                <div class="tagline">_backend.dev // python</div>
-                
-                <p class="bio">
-                    Computer Science student crafting automation, custom scripts, and robust API integrations. Focused on erasing friction from business workflows.
+        <section id="hero" class="relative overflow-hidden py-16 md:py-24">
+          <div class="absolute top-1/4 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+          
+          <div class="relative z-10 max-w-5xl mx-auto px-6 w-full">
+            <div class="grid md:grid-cols-12 gap-12 items-start">
+              
+              <div class="md:col-span-5 md:sticky md:top-24">
+                <p class="reveal text-xs font-semibold text-accent tracking-widest uppercase mb-3">welcome to my potfolio</p>
+                <h1 class="reveal d1 font-display font-bold text-5xl tracking-tight text-zinc-900 dark:text-white mb-6">
+                  Dioubi Abdenour
+                </h1>
+                <p class="reveal d2 text-base text-zinc-500 dark:text-zinc-400 font-light leading-relaxed mb-8">
+                  Computer Science student crafting automation, custom scripts, and robust API integrations. Focused on erasing friction from business workflows.
                 </p>
 
-                <span class="section-label">Core Stack</span>
-                <div class="skills-container">
-                    <span class="skill-tag">Python</span>
-                    <span class="skill-tag">JavaScript</span>
-                    <span class="skill-tag">Apps Script</span>
-                    <span class="skill-tag">Selenium</span>
-                    <span class="skill-tag">BeautifulSoup</span>
-                    <span class="skill-tag">REST APIs</span>
-                    <span class="skill-tag">Pygame</span>
+                <div class="reveal d3">
+                  <p class="text-xs font-medium text-zinc-400 uppercase tracking-widest mb-3">Core Stack</p>
+                  <div class="flex flex-wrap gap-2" role="list" aria-label="Skills">
+                    <span role="listitem" class="text-xs bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 px-3 py-1.5 rounded-lg hover:border-accent transition-colors">Python</span>
+                    <span role="listitem" class="text-xs bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 px-3 py-1.5 rounded-lg hover:border-accent transition-colors">JavaScript</span>
+                    <span role="listitem" class="text-xs bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 px-3 py-1.5 rounded-lg hover:border-accent transition-colors">Apps Script</span>
+                    <span role="listitem" class="text-xs bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 px-3 py-1.5 rounded-lg hover:border-accent transition-colors">Selenium</span>
+                    <span role="listitem" class="text-xs bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 px-3 py-1.5 rounded-lg hover:border-accent transition-colors">BeautifulSoup</span>
+                    <span role="listitem" class="text-xs bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 px-3 py-1.5 rounded-lg hover:border-accent transition-colors">REST APIs</span>
+                    <span role="listitem" class="text-xs bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 px-3 py-1.5 rounded-lg hover:border-accent transition-colors">Pygame</span>
+                  </div>
                 </div>
+              </div>
+
+              <div class="md:col-span-7 main-content flex flex-col gap-8">
+                <p class="reveal text-xs font-medium text-zinc-400 uppercase tracking-widest">Featured Work</p>
                 
-                <div class="sidebar-footer">
-                    <a href="https://github.com/AbdenourDio" target="_blank">→ github/AbdenourDio</a>
-                </div>
-            </div>
-        </div>
+                <article class="reveal d1 card-h group rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+                  <div class="bg-zinc-100 dark:bg-zinc-950 w-full overflow-hidden border-b border-zinc-100 dark:border-zinc-800">
+                    <img src="demo.gif" alt="System Interface Preview" class="w-full h-auto block" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="hidden text-center py-16 text-zinc-400 text-sm font-mono">[ system_demo_visual.gif ]</div>
+                  </div>
 
-        <!-- Right Main Feed -->
-        <div class="main-content">
-            <span class="section-label">Featured Work</span>
-            
-            <div class="project-card">
-                <div class="media-container">
-                    <img src="demo.gif" alt="System Interface Preview" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <div class="media-fallback" style="display: none;">[ system_demo_visual.gif ]</div>
-                </div>
-
-                <div class="card-body">
-                    <div class="card-header">
-                        <h2 class="project-name">Sales Automation & Shipment Tracking System</h2>
-                        <span class="private-badge">Internal App</span>
+                  <div class="p-6 md:p-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                      <h3 class="font-display font-bold text-2xl text-zinc-900 dark:text-white">
+                        Sales Automation & Shipment Tracking System
+                      </h3>
+                      <span class="inline-block text-xs font-mono font-medium border border-orange-200 dark:border-zinc-700 bg-orange-50 dark:bg-zinc-800 text-accent px-2.5 py-1 rounded-md whitespace-nowrap self-start sm:self-auto">
+                        Internal App
+                      </span>
                     </div>
 
-                    <p class="project-intro">
-                        A private Google Apps Script application developed over several months of continuous iteration. Built to completely eliminate manual labor for online sellers by linking spreadsheets directly with multiple external delivery logistics APIs.
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-6">
+                      A private Google Apps Script application developed over several months of continuous iteration. Built to completely eliminate manual labor for online sellers by linking spreadsheets directly with multiple external delivery logistics APIs.
                     </p>
 
-                    <div class="features-grid">
-                        <div class="feature-item">
-                            <span class="feature-icon">📦</span>
-                            <div class="feature-text">
-                                <strong>One-Click Logistics</strong>
-                                <span>Generate parcels instantly across multiple delivery companies.</span>
-                            </div>
+                    <div class="grid sm:grid-cols-2 gap-4 mb-8">
+                      <div class="flex gap-3">
+                        <span class="text-base leading-none mt-0.5">📦</span>
+                        <div>
+                          <h4 class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">One-Click Logistics</h4>
+                          <span class="text-xs text-zinc-400 block mt-0.5">Generate parcels instantly across multiple delivery companies.</span>
                         </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">🔄</span>
-                            <div class="feature-text">
-                                <strong>Real-time Sync</strong>
-                                <span>Automatic shipment status syncing using background REST API workers.</span>
-                            </div>
+                      </div>
+                      <div class="flex gap-3">
+                        <span class="text-base leading-none mt-0.5">🔄</span>
+                        <div>
+                          <h4 class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Real-time Sync</h4>
+                          <span class="text-xs text-zinc-400 block mt-0.5">Automatic shipment status syncing using background REST API workers.</span>
                         </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">📊</span>
-                            <div class="feature-text">
-                                <strong>Smart Dashboarding</strong>
-                                <span>Centralized tracking, auto fee splits, and Cash on Delivery (COD) tallies.</span>
-                            </div>
+                      </div>
+                      <div class="flex gap-3">
+                        <span class="text-base leading-none mt-0.5">📊</span>
+                        <div>
+                          <h4 class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Smart Dashboarding</h4>
+                          <span class="text-xs text-zinc-400 block mt-0.5">Centralized tracking, auto fee splits, and Cash on Delivery tallies.</span>
                         </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">⚡</span>
-                            <div class="feature-text">
-                                <strong>Bulk Operations</strong>
-                                <span>Process thousands of orders at once to bypass API rate limitations.</span>
-                            </div>
+                      </div>
+                      <div class="flex gap-3">
+                        <span class="text-base leading-none mt-0.5">⚡</span>
+                        <div>
+                          <h4 class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Bulk Operations</h4>
+                          <span class="text-xs text-zinc-400 block mt-0.5">Process thousands of orders at once to bypass API rate limitations.</span>
                         </div>
+                      </div>
                     </div>
 
-                    <a href="https://youtu.be/kfYEzLUW_Fk?si=nvFelQfn9omgnOYA" target="_blank" class="action-btn">
-                        Watch System Demonstration ↗
+                    <a href="https://youtu.be/kfYEzLUW_Fk?si=nvFelQfn9omgnOYA" target="_blank" class="shimmer inline-flex items-center gap-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-medium text-sm px-5 py-2.5 rounded-lg hover:bg-accent dark:hover:bg-accent hover:text-white dark:hover:text-white transition-all">
+                      Watch System Demonstration
+                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </a>
-                </div>
+                  </div>
+                </article>
+
+                <article class="reveal d1 card-h group rounded-2xl overflow-hidden bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 hover:border-accent">
+                  <div class="bg-zinc-100 dark:bg-zinc-950 w-full overflow-hidden border-b border-zinc-100 dark:border-zinc-800">
+                    <img src="demo2.gif" alt="Spaceship War Gameplay Preview" class="w-full h-auto block" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="hidden text-center py-16 text-zinc-400 text-sm font-mono">[ demo2.gif - Spaceship War Preview ]</div>
+                  </div>
+
+                  <div class="p-6 md:p-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                      <h3 class="font-display font-bold text-2xl text-zinc-900 dark:text-white">
+                        Spaceship War Desktop Game
+                      </h3>
+                      <span class="inline-block text-xs font-mono font-medium border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-md whitespace-nowrap self-start sm:self-auto">
+                        Desktop App
+                      </span>
+                    </div>
+
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-6">
+                      A local 2-player combat arcade game built completely from scratch using Python and the community-driven <span class="text-zinc-800 dark:text-white font-medium">pygame-ce</span> library. I had a lot of fun making this project while learning the mechanics behind running dynamic gameplay systems.
+                    </p>
+
+                    <div class="grid sm:grid-cols-2 gap-4 mb-8">
+                      <div class="flex gap-3">
+                        <span class="text-base leading-none mt-0.5">🛡️</span>
+                        <div>
+                          <h4 class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Handling Collisions</h4>
+                          <span class="text-xs text-zinc-400 block mt-0.5">Learned how to map running hitbox coordinates (`pygame.Rect`) to flag instantly when bullet arrays strike moving target vectors.</span>
+                        </div>
+                      </div>
+                      <div class="flex gap-3">
+                        <span class="text-base leading-none mt-0.5">⏱️</span>
+                        <div>
+                          <h4 class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Frame Rate Control</h4>
+                          <span class="text-xs text-zinc-400 block mt-0.5">Gained experience tying updates to an explicit clock tick loop (60 FPS) to guarantee smooth sprite motion across different machine setups.</span>
+                        </div>
+                      </div>
+                      <div class="flex gap-3">
+                        <span class="text-base leading-none mt-0.5">🚀</span>
+                        <div>
+                          <h4 class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Vector Math & Bullets</h4>
+                          <span class="text-xs text-zinc-400 block mt-0.5">Mastered dynamic object handling by updating object positioning arrays on every loop cycle, and safely scrubbing off-screen data arrays out of memory.</span>
+                        </div>
+                      </div>
+                      <div class="flex gap-3">
+                        <span class="text-base leading-none mt-0.5">🎮</span>
+                        <div>
+                          <h4 class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Same-Keyboard PVP</h4>
+                          <span class="text-xs text-zinc-400 block mt-0.5">Player 1 moves via <strong>Q Z S D</strong> and shoots with Left CTRL; Player 2 handles the <strong>Arrow Keys</strong> and Right CTRL.</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <a href="https://github.com/AbdenourDio/spaceship-war-pygame" target="_blank" class="shimmer inline-flex items-center gap-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-medium text-sm px-5 py-2.5 rounded-lg hover:bg-accent dark:hover:bg-accent hover:text-white dark:hover:text-white transition-all">
+                      View Source Code on GitHub
+                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                    </a>
+                  </div>
+                </article>
+
+              </div>
+              
             </div>
-        </div>
+          </div>
+        </section>
 
-    </div>
+    </main>
 
+    <footer class="border-t border-zinc-100 dark:border-zinc-900 py-6">
+      <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-400">
+        <p>© <span id="yr"></span> Dioubi Abdenour. All rights reserved.</p>
+        <p>Built with Tailwind CSS &amp; Alpine.js</p>
+      </div>
+    </footer>
+
+    <script>
+    function app() {
+      return {
+        dark: false,
+        sc: false,
+
+        init() {
+          this.dark = localStorage.getItem('theme') === 'dark' ||
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          this.$watch('dark', v => localStorage.setItem('theme', v ? 'dark' : 'light'));
+
+          window.addEventListener('scroll', () => {
+            this.sc = window.scrollY > 20;
+          }, { passive: true });
+
+          const io = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+          }, { threshold: 0.05 });
+          document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+          document.getElementById('yr').textContent = new Date().getFullYear();
+        }
+      }
+    }
+    </script>
 </body>
 </html>
