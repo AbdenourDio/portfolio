@@ -43,19 +43,19 @@
             gap: 4rem;
         }
 
-        @media (max-width: 900px) {
-            .portfolio-wrapper {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-            }
-            body { padding: 2rem 1rem; }
+        /* Fixed Sidebar Architecture Layout */
+        .sidebar-container {
+            position: relative;
         }
 
-        /* Left Column: Fixed Bio & Stack */
         .sidebar {
+            position: -webkit-sticky;
             position: sticky;
             top: 4rem;
-            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: auto;
         }
 
         .profile-title {
@@ -81,21 +81,28 @@
             font-size: 1rem;
             margin-bottom: 2.5rem;
         }
-
+        
         .section-label {
             font-family: 'JetBrains Mono', monospace;
             text-transform: uppercase;
             font-size: 0.75rem;
+            font-weight: 700;
             letter-spacing: 2px;
-            color: var(--purple);
-            margin-bottom: 1rem;
-            display: block;
+            color: var(--neon-cyan);
+            background: rgba(139, 233, 253, 0.05);
+            border: 1px solid rgba(139, 233, 253, 0.15);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.03);
         }
 
         .skills-container {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
+            margin-bottom: 3rem;
         }
 
         .skill-tag {
@@ -167,6 +174,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
+            gap: 1rem;
         }
 
         .project-name {
@@ -183,6 +191,7 @@
             color: var(--neon-pink);
             padding: 0.2rem 0.6rem;
             border-radius: 4px;
+            white-space: nowrap;
         }
 
         .project-intro {
@@ -196,10 +205,6 @@
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
             margin-bottom: 2.5rem;
-        }
-
-        @media (max-width: 600px) {
-            .features-grid { grid-template-columns: 1fr; }
         }
 
         .feature-item {
@@ -226,6 +231,7 @@
             display: block;
         }
 
+        /* Upgraded Pulsing Action Button */
         .action-btn {
             display: inline-flex;
             align-items: center;
@@ -237,24 +243,65 @@
             border-radius: 8px;
             font-weight: 700;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
+            transition: transform 0.2s ease;
+            animation: slowPulse 3s infinite ease-in-out;
         }
 
         .action-btn:hover {
+            animation: none; /* Stops pulsing when hovering over it */
             background: var(--neon-green);
-            transform: scale(1.02);
+            color: var(--bg);
+            transform: scale(1.04);
+            box-shadow: 0 0 20px rgba(80, 250, 123, 0.4);
         }
 
-        footer {
+        /* The Slow Pulse Keyframes Animation Loop */
+        @keyframes slowPulse {
+            0% {
+                background: var(--text);
+                box-shadow: 0 0 0 0 rgba(248, 248, 242, 0.4);
+            }
+            50% {
+                background: var(--neon-green);
+                box-shadow: 0 0 15px 4px rgba(80, 250, 123, 0.3);
+            }
+            100% {
+                background: var(--text);
+                box-shadow: 0 0 0 0 rgba(248, 248, 242, 0);
+            }
+        }
+
+        .sidebar-footer {
             margin-top: auto;
-            padding-top: 4rem;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
 
-        footer a {
+        .sidebar-footer a {
             color: var(--neon-pink);
             text-decoration: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .sidebar-footer a:hover {
+            opacity: 0.8;
+        }
+
+        /* Responsive Mobile Breaks */
+        @media (max-width: 900px) {
+            .portfolio-wrapper {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            body { padding: 2rem 1rem; }
+            .sidebar { position: static; }
+            .skills-container { margin-bottom: 1.5rem; }
+            .sidebar-footer { margin-top: 1.5rem; }
+        }
+
+        @media (max-width: 600px) {
+            .features-grid { grid-template-columns: 1fr; }
+            .card-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
         }
     </style>
 </head>
@@ -262,29 +309,31 @@
 
     <div class="portfolio-wrapper">
         
-        <!-- Left Sticky Sidebar -->
-        <div class="sidebar">
-            <h1 class="profile-title">Dioubi<br>Abdenour</h1>
-            <div class="tagline">_backend.dev // python</div>
-            
-            <p class="bio">
-                Computer Science student crafting automation, custom scripts, and robust API integrations. Focused on erasing friction from business workflows.
-            </p>
+        <!-- Structural Sidebar Wrapper Layer -->
+        <div class="sidebar-container">
+            <div class="sidebar">
+                <h1 class="profile-title">Dioubi<br>Abdenour</h1>
+                <div class="tagline">_backend.dev // python</div>
+                
+                <p class="bio">
+                    Computer Science student crafting automation, custom scripts, and robust API integrations. Focused on erasing friction from business workflows.
+                </p>
 
-            <span class="section-label">Core Stack</span>
-            <div class="skills-container">
-                <span class="skill-tag">Python</span>
-                <span class="skill-tag">JavaScript</span>
-                <span class="skill-tag">Apps Script</span>
-                <span class="skill-tag">Selenium</span>
-                <span class="skill-tag">BeautifulSoup</span>
-                <span class="skill-tag">REST APIs</span>
-                <span class="skill-tag">Pygame</span>
+                <span class="section-label">Core Stack</span>
+                <div class="skills-container">
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">JavaScript</span>
+                    <span class="skill-tag">Apps Script</span>
+                    <span class="skill-tag">Selenium</span>
+                    <span class="skill-tag">BeautifulSoup</span>
+                    <span class="skill-tag">REST APIs</span>
+                    <span class="skill-tag">Pygame</span>
+                </div>
+                
+                <div class="sidebar-footer">
+                    <a href="https://github.com/AbdenourDio" target="_blank">→ github/AbdenourDio</a>
+                </div>
             </div>
-            
-            <footer>
-                <a href="https://github.com/AbdenourDio" target="_blank">→ github/AbdenourDio</a>
-            </footer>
         </div>
 
         <!-- Right Main Feed -->
@@ -293,19 +342,18 @@
             
             <div class="project-card">
                 <div class="media-container">
-                    <!-- Your 800x450 gif handles beautifully here now -->
                     <img src="demo.gif" alt="System Interface Preview" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                     <div class="media-fallback" style="display: none;">[ system_demo_visual.gif ]</div>
                 </div>
 
                 <div class="card-body">
                     <div class="card-header">
-                        <h2 class="project-name">Sales Automation & Shipment Tracking</h2>
+                        <h2 class="project-name">Sales Automation & Shipment Tracking System</h2>
                         <span class="private-badge">Internal App</span>
                     </div>
 
                     <p class="project-intro">
-                        A private Google Apps Script application built to completely eliminate manual labor for online sellers by linking spreadsheets directly with multiple external delivery logistics APIs.
+                        A private Google Apps Script application developed over several months of continuous iteration. Built to completely eliminate manual labor for online sellers by linking spreadsheets directly with multiple external delivery logistics APIs.
                     </p>
 
                     <div class="features-grid">
@@ -339,8 +387,7 @@
                         </div>
                     </div>
 
-                    <!-- Change the URL below to your actual YouTube video link -->
-                    <a href="YOUR_YOUTUBE_URL_HERE" target="_blank" class="action-btn">
+                    <a href="https://youtu.be/kfYEzLUW_Fk?si=nvFelQfn9omgnOYA" target="_blank" class="action-btn">
                         Watch System Demonstration ↗
                     </a>
                 </div>
