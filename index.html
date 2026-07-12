@@ -138,16 +138,24 @@
         .media-container {
             position: relative;
             background: #0f111a;
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 100%;
+            display: block;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
 
         .media-container img {
             width: 100%;
             height: auto;
             display: block;
+        }
+
+        .media-fallback {
+            padding: 6rem 2rem;
+            text-align: center;
+            color: var(--purple);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
         }
 
         .card-body {
@@ -285,8 +293,9 @@
             
             <div class="project-card">
                 <div class="media-container">
-                    <!-- Drop your demo.gif here. If missing, it smoothly falls back to a sleek layout -->
-                    <img src="demo.gif" alt="System Interface Preview" onerror="this.style.display='none'; this.parentNode.innerHTML='<div style=\"padding:4rem; text-align:center; color:var(--purple); font-family:\'JetBrains Mono\', monospace; font-size:0.9rem;\">[ system_demo_visual.gif ]</div>'">
+                    <!-- Your 800x450 gif handles beautifully here now -->
+                    <img src="demo.gif" alt="System Interface Preview" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="media-fallback" style="display: none;">[ system_demo_visual.gif ]</div>
                 </div>
 
                 <div class="card-body">
