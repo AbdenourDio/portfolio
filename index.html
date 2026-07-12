@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dioubi Abdenour | Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg: #0b0d19;
+            --surface: #161930;
+            --surface-hover: #1f2344;
+            --text: #f8f8f2;
+            --text-muted: #949ebd;
+            --purple: #6272a4;
+            --neon-pink: #ff79c6;
+            --neon-green: #50fa7b;
+            --neon-cyan: #8be9fd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.6;
+            padding: 4rem 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .portfolio-wrapper {
+            max-width: 1100px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 4rem;
+        }
+
+        @media (max-width: 900px) {
+            .portfolio-wrapper {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            body { padding: 2rem 1rem; }
+        }
+
+        /* Left Column: Fixed Bio & Stack */
+        .sidebar {
+            position: sticky;
+            top: 4rem;
+            height: fit-content;
+        }
+
+        .profile-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--neon-pink);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .bio {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: var(--purple);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: rgba(98, 114, 164, 0.1);
+            border: 1px solid rgba(98, 114, 164, 0.2);
+            color: var(--neon-cyan);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .skill-tag:hover {
+            border-color: var(--neon-cyan);
+            background: rgba(139, 233, 253, 0.05);
+        }
+
+        /* Right Column: Dynamic Project Showcase */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(98, 114, 164, 0.3);
+        }
+
+        .media-container {
+            position: relative;
+            background: #0f111a;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .media-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .card-body {
+            padding: 2.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .private-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            background: rgba(255, 121, 198, 0.1);
+            border: 1px solid var(--neon-pink);
+            color: var(--neon-pink);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+        }
+
+        .project-intro {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .features-grid { grid-template-columns: 1fr; }
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .feature-icon {
+            color: var(--neon-green);
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .feature-text strong {
+            display: block;
+            color: var(--text);
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .feature-text span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: block;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--text);
+            color: var(--bg);
+            text-decoration: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--neon-green);
+            transform: scale(1.02);
+        }
+
+        footer {
+            margin-top: auto;
+            padding-top: 4rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        footer a {
+            color: var(--neon-pink);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portfolio-wrapper">
+        
+        <!-- Left Sticky Sidebar -->
+        <div class="sidebar">
+            <h1 class="profile-title">Dioubi<br>Abdenour</h1>
+            <div class="tagline">_backend.dev // python</div>
+            
+            <p class="bio">
+                Computer Science student crafting automation, custom scripts, and robust API integrations. Focused on erasing friction from business workflows.
+            </p>
+
+            <span class="section-label">Core Stack</span>
+            <div class="skills-container">
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">Apps Script</span>
+                <span class="skill-tag">Selenium</span>
+                <span class="skill-tag">BeautifulSoup</span>
+                <span class="skill-tag">REST APIs</span>
+                <span class="skill-tag">Pygame</span>
+            </div>
+            
+            <footer>
+                <a href="https://github.com/AbdenourDio" target="_blank">→ github/AbdenourDio</a>
+            </footer>
+        </div>
+
+        <!-- Right Main Feed -->
+        <div class="main-content">
+            <span class="section-label">Featured Work</span>
+            
+            <div class="project-card">
+                <div class="media-container">
+                    <!-- Drop your demo.gif here. If missing, it smoothly falls back to a sleek layout -->
+                    <img src="demo.gif" alt="System Interface Preview" onerror="this.style.display='none'; this.parentNode.innerHTML='<div style=\"padding:4rem; text-align:center; color:var(--purple); font-family:\'JetBrains Mono\', monospace; font-size:0.9rem;\">[ system_demo_visual.gif ]</div>'">
+                </div>
+
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="project-name">Sales Automation & Shipment Tracking</h2>
+                        <span class="private-badge">Internal App</span>
+                    </div>
+
+                    <p class="project-intro">
+                        A private Google Apps Script application built to completely eliminate manual labor for online sellers by linking spreadsheets directly with multiple external delivery logistics APIs.
+                    </p>
+
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <span class="feature-icon">📦</span>
+                            <div class="feature-text">
+                                <strong>One-Click Logistics</strong>
+                                <span>Generate parcels instantly across multiple delivery companies.</span>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🔄</span>
+                            <div class="feature-text">
+                                <strong>Real-time Sync</strong>
+                                <span>Automatic shipment status syncing using background REST API workers.</span>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📊</span>
+                            <div class="feature-text">
+                                <strong>Smart Dashboarding</strong>
+                                <span>Centralized tracking, auto fee splits, and Cash on Delivery (COD) tallies.</span>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">⚡</span>
+                            <div class="feature-text">
+                                <strong>Bulk Operations</strong>
+                                <span>Process thousands of orders at once to bypass API rate limitations.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Change the URL below to your actual YouTube video link -->
+                    <a href="YOUR_YOUTUBE_URL_HERE" target="_blank" class="action-btn">
+                        Watch System Demonstration ↗
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
